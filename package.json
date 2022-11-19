@@ -1,0 +1,24 @@
+{
+  "name": "fullstackopen_part3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start":"npm start",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/theo-mitchell/fullstackopen_part3.git"
+  },
+  "author": "Theo Mitchell",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/theo-mitchell/fullstackopen_part3/issues"
+  },
+  "homepage": "https://github.com/theo-mitchell/fullstackopen_part3#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
