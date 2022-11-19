@@ -1,6 +1,13 @@
 const express = require("express");
 const app = express();
 
+app.use(express.json());
+
+const createId = () => {
+  const maxId = persons.length > 0 ? Math.max(...persons.map((n) => n.id)) : 0;
+  return maxId + 1;
+};
+
 let persons = [
   {
     id: 1,
@@ -28,6 +35,27 @@ app.get("/info", (req, res) => {
   let message = `Phonebook has info for ${persons.length} people </br>`;
   let currentTime = new Date();
   return res.send(message + currentTime);
+});
+
+app.post("/api/persons", (req, res) => {
+  const body = req.body;
+  if (!body.name || !body.number) {
+    return res.status(400).json({ error: "please provide a name and phone number" });
+  }
+
+  nameMatch = persons.find((person) => person.name === body.name);
+  if (nameMatch) {
+    return res.status(400).json({ error: 'name must be unique' });
+  }
+
+  const person = {
+    id: createId(),
+    name: body.name,
+    number: body.number,
+  };
+
+  persons = persons.concat(person);
+  return res.json(person);
 });
 
 app.get("/api/persons", (req, res) => {
