@@ -27,11 +27,22 @@ const persons = [
 app.get("/info", (req, res) => {
   let message = `Phonebook has info for ${persons.length} people </br>`;
   let currentTime = new Date();
-  res.send(message + currentTime);
+  return res.send(message + currentTime);
 });
 
 app.get("/api/persons", (req, res) => {
   return res.json(persons);
+});
+
+app.get("/api/persons/:id", (req, res) => {
+  const id = Number(req.params.id);
+  const person = persons.find((person) => person.id === id);
+
+  if (!person) {
+    return res.status(404).end();
+  }
+
+  return res.json(person);
 });
 
 const PORT = 3001;
