@@ -1,9 +1,34 @@
+const { response } = require("express");
 const express = require("express");
 const app = express();
-const morgan = require('morgan');
+const morgan = require("morgan");
 
 app.use(express.json());
-app.use(morgan('tiny'));
+
+morgan.token("body", (req) => {
+  let body = "";
+
+  if (JSON.stringify(req.body) !== "{}") {
+    body = JSON.stringify(req.body);
+  }
+
+  return body;
+});
+
+const createMorganResponse = (tokens, request, response) => {
+  return [
+    tokens.method(request, response),
+    tokens.url(request, response),
+    tokens.status(request, response),
+    tokens.res(request, response, "content-length"),
+    "-",
+    tokens["response-time"](request, response),
+    "ms",
+    tokens["body"](request, response),
+  ].join(" ");
+};
+
+app.use(morgan(createMorganResponse));
 
 const createId = () => {
   const maxId = persons.length > 0 ? Math.max(...persons.map((n) => n.id)) : 0;
@@ -42,12 +67,14 @@ app.get("/info", (req, res) => {
 app.post("/api/persons", (req, res) => {
   const body = req.body;
   if (!body.name || !body.number) {
-    return res.status(400).json({ error: "please provide a name and phone number" });
+    return res
+      .status(400)
+      .json({ error: "please provide a name and phone number" });
   }
 
   nameMatch = persons.find((person) => person.name === body.name);
   if (nameMatch) {
-    return res.status(400).json({ error: 'name must be unique' });
+    return res.status(400).json({ error: "name must be unique" });
   }
 
   const person = {
