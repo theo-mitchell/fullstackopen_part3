@@ -1,7 +1,9 @@
 const express = require("express");
 const app = express();
+const morgan = require('morgan');
 
 app.use(express.json());
+app.use(morgan('tiny'));
 
 const createId = () => {
   const maxId = persons.length > 0 ? Math.max(...persons.map((n) => n.id)) : 0;
