@@ -1,9 +1,9 @@
-const { response } = require("express");
 const express = require("express");
 const app = express();
 const morgan = require("morgan");
+const Persons = require("./models/persons");
 
-app.use(express.static('build'));
+app.use(express.static("build"));
 app.use(express.json());
 
 morgan.token("body", (req) => {
@@ -65,7 +65,7 @@ let persons = [
 ];
 
 app.get("/info", (req, res) => {
-  let message = `Phonebook has info for ${persons.length} people </br>`;
+  let message = `Phonebook has info for ${Persons.length} people </br>`;
   let currentTime = new Date();
   return res.send(message + currentTime);
 });
@@ -94,7 +94,9 @@ app.post("/api/persons", (req, res) => {
 });
 
 app.get("/api/persons", (req, res) => {
-  return res.json(persons);
+  Persons.find({}).then((people) => {
+    res.json(people);
+  });
 });
 
 app.get("/api/persons/:id", (req, res) => {
