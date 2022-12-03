@@ -15,9 +15,20 @@ mongoose
     console.error();
   });
 
+const phoneValidation = (v) => {
+  return /\d{2,3}-\d{1,}/.test(v);
+}
+
 const personSchema = new mongoose.Schema({
   name: { type: String, minLength: 3, required: true },
-  phone: { type: String },
+  phone: { 
+    type: String, 
+    minLength: 8,
+    validate: {
+      validator: phoneValidation
+    },
+    required: [true, 'User phone number required']
+  },
 });
 
 personSchema.set("toJSON", {
