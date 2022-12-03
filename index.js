@@ -31,10 +31,18 @@ const createMorganResponse = (tokens, request, response) => {
 
 app.use(morgan(createMorganResponse));
 
-app.get("/info", (req, res) => {
-  let message = `Phonebook has info for ${Persons.length} people </br>`;
-  let currentTime = new Date();
-  return res.send(message + currentTime);
+app.get("/info", (req, res, next) => {
+  const query = Persons.find();
+  query
+    .count()
+    .then((count) => {
+      let message = `Phonebook has info for ${count} people </br>`;
+      let currentTime = new Date();
+      return res.send(message + currentTime);
+    })
+    .catch((error) => {
+      next(error);
+    });
 });
 
 app.post("/api/persons", (req, res) => {
@@ -67,11 +75,6 @@ app.put("/api/persons/:id", (req, res, next) => {
       .status(400)
       .json({ error: "please provide a name and phone number" });
   }
-
-  // nameMatch = persons.find((person) => person.name === body.name);
-  // if (nameMatch) {
-  //   return res.status(400).json({ error: "name must be unique" });
-  // }
 
   const person = {
     name: body.name,
