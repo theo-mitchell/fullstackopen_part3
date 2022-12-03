@@ -45,7 +45,7 @@ app.get("/info", (req, res, next) => {
     });
 });
 
-app.post("/api/persons", (req, res) => {
+app.post("/api/persons", (req, res, next) => {
   const body = req.body;
   if (!body.name || !body.phone) {
     return res
@@ -63,9 +63,12 @@ app.post("/api/persons", (req, res) => {
     phone: body.phone,
   });
 
-  person.save().then((result) => {
-    res.json(result);
-  });
+  person
+    .save()
+    .then((result) => {
+      res.json(result);
+    })
+    .catch((error) => next(error));
 });
 
 app.put("/api/persons/:id", (req, res, next) => {
@@ -81,7 +84,11 @@ app.put("/api/persons/:id", (req, res, next) => {
     phone: body.phone,
   };
 
-  Persons.findByIdAndUpdate(req.params.id, person, { new: true })
+  Persons.findByIdAndUpdate(req.params.id, person, {
+    new: true,
+    runValidators: true,
+    context: "query",
+  })
     .then((updatedPerson) => {
       res.json(updatedPerson);
     })
@@ -115,8 +122,14 @@ app.delete("/api/persons/:id", (request, response, next) => {
 });
 
 const errorHandler = (error, request, response, next) => {
+  console.error(error.message);
+
   if (error.name === "CastError") {
-    return response.status(400).send({ error: "Could not delete person" });
+    return response
+      .status(400)
+      .send({ error: "Could not delete person, person not found" });
+  } else if (error.name === "ValidationError") {
+    return response.status(400).send({ error: error.message });
   }
 
   next(error);
