@@ -58,8 +58,31 @@ app.post("/api/persons", (req, res) => {
   person.save().then((result) => {
     res.json(result);
   });
-  // persons = persons.concat(person);
-  // return res.json(person);
+});
+
+app.put("/api/persons/:id", (req, res, next) => {
+  const body = req.body;
+  if (!body.name || !body.phone) {
+    return res
+      .status(400)
+      .json({ error: "please provide a name and phone number" });
+  }
+
+  // nameMatch = persons.find((person) => person.name === body.name);
+  // if (nameMatch) {
+  //   return res.status(400).json({ error: "name must be unique" });
+  // }
+
+  const person = {
+    name: body.name,
+    phone: body.phone,
+  };
+
+  Persons.findByIdAndUpdate(req.params.id, person, { new: true })
+    .then((updatedPerson) => {
+      res.json(updatedPerson);
+    })
+    .catch((err) => next(err));
 });
 
 app.get("/api/persons", (req, res) => {
