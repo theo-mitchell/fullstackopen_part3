@@ -115,7 +115,7 @@ app.delete("/api/persons/:id", (request, response, next) => {
   const id = request.params.id;
 
   Persons.findByIdAndRemove(id)
-    .then((result) => {
+    .then(() => {
       response.status(204).end();
     })
     .catch((error) => next(error));
@@ -136,6 +136,7 @@ const errorHandler = (error, request, response, next) => {
 };
 app.use(errorHandler);
 
+// eslint-disable-next-line no-undef
 const PORT = process.env.port || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

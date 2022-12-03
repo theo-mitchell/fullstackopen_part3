@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 require("dotenv-flow").config();
 const mongoose = require("mongoose");
 
@@ -8,26 +9,26 @@ const url = `mongodb+srv://${login}:${password}@cluster0.wvoz7g2.mongodb.net/pho
 
 mongoose
   .connect(url)
-  .then((result) => {
+  .then(() => {
     console.log("---CONNECTED---");
   })
   .catch((error) => {
-    console.error();
+    console.error(error);
   });
 
 const phoneValidation = (v) => {
   return /\d{2,3}-\d{1,}/.test(v);
-}
+};
 
 const personSchema = new mongoose.Schema({
   name: { type: String, minLength: 3, required: true },
-  phone: { 
-    type: String, 
+  phone: {
+    type: String,
     minLength: 8,
     validate: {
-      validator: phoneValidation
+      validator: phoneValidation,
     },
-    required: [true, 'User phone number required']
+    required: [true, "User phone number required"],
   },
 });
 

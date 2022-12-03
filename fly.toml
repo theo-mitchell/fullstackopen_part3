@@ -1,6 +1,6 @@
-# fly.toml file generated for rough-night-5290 on 2022-11-25T20:17:38-06:00
+# fly.toml file generated for divine-dawn-6782 on 2022-12-02T21:31:38-06:00
 
-app = "rough-night-5290"
+app = "divine-dawn-6782"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
